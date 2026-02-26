@@ -1,0 +1,17 @@
+{
+  "name": "MN.dev Portfolio",
+  "short_name": "MN.dev",
+  "description": "Portfolio of Mohammed Nuhan, AI & Software Engineering Student",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "profile.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
