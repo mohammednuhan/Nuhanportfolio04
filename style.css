@@ -62,6 +62,11 @@ ul {
     list-style: none;
 }
 
+/* SPA Navigation Additions */
+section.hidden-section {
+    display: none !important;
+}
+
 /* Utilities */
 .gradient-text {
     background: var(--gradient-primary);

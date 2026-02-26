@@ -17,14 +17,75 @@ hamburger.addEventListener('click', () => {
     }
 });
 
-// Close Mobile Menu when clicking a link
-navLinksItems.forEach(item => {
-    item.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        const icon = hamburger.querySelector('i');
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
+// SPA Navigation Logic
+const sections = document.querySelectorAll('section');
+const pageLinks = document.querySelectorAll('a[href^="#"]');
+
+function navigateTo(hash) {
+    const targetId = hash || '#hero';
+    const targetSection = document.querySelector(targetId);
+
+    // If the target section doesn't exist, fallback to hero
+    if (!targetSection) {
+        if (targetId !== '#hero') navigateTo('#hero');
+        return;
+    }
+
+    // Hide all sections
+    sections.forEach(sec => sec.classList.add('hidden-section'));
+
+    // Show target section and reset animations so Observer re-triggers them
+    targetSection.classList.remove('hidden-section');
+    const fadeElements = targetSection.querySelectorAll('.fade-up');
+    fadeElements.forEach(el => el.classList.remove('visible'));
+
+    // Update active nav link
+    navLinksItems.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === targetId) {
+            link.classList.add('active');
+        }
     });
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
+// Handle browser navigation (Back/Forward)
+window.addEventListener('popstate', () => {
+    navigateTo(window.location.hash);
+});
+
+// Intercept all internal page links (Navbar, Logo, Buttons)
+pageLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        const hash = link.getAttribute('href');
+        if (!hash || hash === '#') return;
+
+        e.preventDefault();
+
+        // Update URL
+        if (history.pushState) {
+            history.pushState(null, null, hash);
+        } else {
+            location.hash = hash;
+        }
+
+        navigateTo(hash);
+
+        // Mobile menu cleanup
+        if (navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            const icon = hamburger.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    });
+});
+
+// Initialize SPA on load
+document.addEventListener("DOMContentLoaded", () => {
+    navigateTo(window.location.hash);
 });
 
 // Navbar background on scroll
