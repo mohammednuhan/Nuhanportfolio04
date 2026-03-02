@@ -1,17 +1,25 @@
 {
-  "name": "MN.dev Portfolio",
-  "short_name": "MN.dev",
-  "description": "Portfolio of Mohammed Nuhan, AI & Software Engineering Student",
+  "name": "Mohammed Nuhan | AI & Software Engineering",
+  "short_name": "MN Portfolio",
+  "description": "Personal portfolio of Mohammed Nuhan, AI Student and Software Engineer specializing in intelligent systems and full stack dev.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#2563eb",
+  "background_color": "#0a0a0a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
   "icons": [
     {
       "src": "profile.jpeg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "profile.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "maskable"
     }
   ]
 }

@@ -17,63 +17,9 @@ hamburger.addEventListener('click', () => {
     }
 });
 
-// SPA Navigation Logic
-const sections = document.querySelectorAll('section');
-const pageLinks = document.querySelectorAll('a[href^="#"]');
-
-function navigateTo(hash) {
-    const targetId = hash || '#hero';
-    const targetSection = document.querySelector(targetId);
-
-    // If the target section doesn't exist, fallback to hero
-    if (!targetSection) {
-        if (targetId !== '#hero') navigateTo('#hero');
-        return;
-    }
-
-    // Hide all sections
-    sections.forEach(sec => sec.classList.add('hidden-section'));
-
-    // Show target section and reset animations so Observer re-triggers them
-    targetSection.classList.remove('hidden-section');
-    const fadeElements = targetSection.querySelectorAll('.fade-up');
-    fadeElements.forEach(el => el.classList.remove('visible'));
-
-    // Update active nav link
-    navLinksItems.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === targetId) {
-            link.classList.add('active');
-        }
-    });
-
-    // Scroll to top
-    window.scrollTo(0, 0);
-}
-
-// Handle browser navigation (Back/Forward)
-window.addEventListener('popstate', () => {
-    navigateTo(window.location.hash);
-});
-
-// Intercept all internal page links (Navbar, Logo, Buttons)
-pageLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        const hash = link.getAttribute('href');
-        if (!hash || hash === '#') return;
-
-        e.preventDefault();
-
-        // Update URL
-        if (history.pushState) {
-            history.pushState(null, null, hash);
-        } else {
-            location.hash = hash;
-        }
-
-        navigateTo(hash);
-
-        // Mobile menu cleanup
+// Smooth Scroll Navigation — close mobile menu on link click
+navLinksItems.forEach(link => {
+    link.addEventListener('click', () => {
         if (navLinks.classList.contains('active')) {
             navLinks.classList.remove('active');
             const icon = hamburger.querySelector('i');
@@ -81,11 +27,6 @@ pageLinks.forEach(link => {
             icon.classList.add('fa-bars');
         }
     });
-});
-
-// Initialize SPA on load
-document.addEventListener("DOMContentLoaded", () => {
-    navigateTo(window.location.hash);
 });
 
 // Navbar background on scroll
@@ -98,6 +39,28 @@ window.addEventListener('scroll', () => {
         navbar.style.boxShadow = 'none';
     }
 });
+
+// Active Nav Highlight on Scroll
+const sections = document.querySelectorAll('section[id]');
+
+function highlightNav() {
+    const scrollY = window.scrollY + 120;
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.getAttribute('id');
+        const navLink = document.querySelector(`.nav-links a[href="#${sectionId}"]`);
+        if (navLink) {
+            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                navLink.classList.add('active');
+            } else {
+                navLink.classList.remove('active');
+            }
+        }
+    });
+}
+
+window.addEventListener('scroll', highlightNav);
 
 // Typing Effect
 const typedTextSpan = document.querySelector(".typing-text");
@@ -147,12 +110,10 @@ const observerOptions = {
     threshold: 0.15
 };
 
-const observer = new IntersectionObserver((entries, observer) => {
+const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            // Unobserve after animating once
-            // observer.unobserve(entry.target); 
         }
     });
 }, observerOptions);
